@@ -24,7 +24,6 @@ class Config:
             raise RuntimeError("Only one config object allowed.")
 
     def populate_configs(self) -> None:
-        print("foo")
 
         # which CI platform format to parse pipeline files with
         self.platform = ""
