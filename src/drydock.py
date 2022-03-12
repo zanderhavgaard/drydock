@@ -1,16 +1,24 @@
-import cli_args
+import logging
 from argparse import Namespace
-from config import Config
-import docker_utils
-import abstract_importer
+from rich.logging import RichHandler
+import cli_args
 import utils
+import config
 
-config = Config.get()
+# setup logging
+logging.basicConfig(format="%(message)s", datefmt="[%X]", level=logging.DEBUG, handlers=[RichHandler()])
+log = logging.getLogger("rich")
 
 
 def entrypoint(args: Namespace = None) -> None:
 
+    if config.PRINT_BANNER:
+        utils.print_banner()
+
+    log.info("Starting drydock.")
+
     if args is None:
+        log.debug("Parsing cli args")
         # parse the cli args
         args = cli_args.parse_cli_args()
         # update the global config with args
@@ -20,7 +28,7 @@ def entrypoint(args: Namespace = None) -> None:
     importer = utils.create_importer()
 
     # create a run from a pipeline file
-    run = importer.load_pipeline_file(config.filename)
+    run = importer.load_pipeline_file(config.FILENAME)
 
     # execute taks in containers for the run
     run.execute()

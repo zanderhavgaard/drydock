@@ -1,10 +1,7 @@
 import yaml
 from model import Run
 from abstract_importer import AbstractImporter
-from config import Config
 from pprint import pprint
-
-config = Config.get()
 
 
 class GithubActionsImporter(AbstractImporter):

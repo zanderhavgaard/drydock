@@ -1,44 +1,27 @@
 """
 Provides global configuration
 """
-from sys import exit
 from argparse import Namespace
 
+# whether to print the banner when starting
+PRINT_BANNER = True
 
-class Config:
+# which CI platform format to parse pipeline files with
+PLATFORM = ""
 
-    # only one config object allowed
-    _instance = None
+# supported pipeline platforms
+SUPPORTED_PLATFORMS = ["githubactions"]
 
-    @staticmethod
-    def get():
-        if Config._instance is None:
-            Config()
-        return Config._instance
+# which pipeline file to operate on
+FILENAME = ""
 
-    def __init__(self) -> None:
-        if Config._instance is None:
-            self.populate_configs()
-            Config._instance = self
-        else:
-            # This should never happen.
-            raise RuntimeError("Only one config object allowed.")
 
-    def populate_configs(self) -> None:
+def add_args_to_config(args: Namespace) -> None:
 
-        # which CI platform format to parse pipeline files with
-        self.platform = ""
+    global PLATFORM, FILENAME
 
-        # supported pipeline platforms
-        self.supported_platforms = ["githubactions"]
+    if args.platform:
+        PLATFORM = args.platform
 
-        # which pipeline file to operate on
-        self.filename = ""
-
-    def add_args_to_config(self, args: Namespace) -> None:
-
-        if args.platform:
-            self.platform = args.platform
-
-        if args.filename:
-            self.filename = args.filename
+    if args.filename:
+        FILENAME = args.filename
