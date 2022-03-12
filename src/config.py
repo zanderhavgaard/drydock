@@ -1,6 +1,7 @@
 """
 Provides global configuration
 """
+from sys import exit
 from argparse import Namespace
 
 
@@ -27,6 +28,9 @@ class Config:
 
         # which CI platform format to parse pipeline files with
         self.platform = ""
+
+        # supported pipeline platforms
+        self.supported_platforms = ["githubactions"]
 
         # which pipeline file to operate on
         self.filename = ""
