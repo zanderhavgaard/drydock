@@ -21,6 +21,3 @@ class Run:
     def __init__(self, name: str, containers: list[Container]) -> None:
         self.name = name
         self.containers = containers
-
-    def execute(self):
-        pass
