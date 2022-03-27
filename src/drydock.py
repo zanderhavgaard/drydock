@@ -6,7 +6,7 @@ import utils
 import config
 
 # setup logging
-logging.basicConfig(format="%(message)s", datefmt="[%X]", level=logging.DEBUG, handlers=[RichHandler()])
+logging.basicConfig(format="%(message)s", datefmt="[%X]", level=config.LOG_LEVEL, handlers=[RichHandler()])
 log = logging.getLogger("rich")
 
 
@@ -28,10 +28,12 @@ def entrypoint(args: Namespace = None) -> None:
     importer = utils.create_importer()
 
     # create a run from a pipeline file
-    run = importer.load_pipeline_file(config.FILENAME)
+    run = importer.import_pipeline_file(config.FILENAME)
 
     # execute taks in containers for the run
-    run.execute()
+    run.execute_run()
+
+    print("sanity")
 
     #  docker_utils.run_test_container()
 

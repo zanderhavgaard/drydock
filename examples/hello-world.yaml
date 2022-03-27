@@ -10,8 +10,11 @@ jobs:
 
       - run: echo "no name"
 
-      # - name: longer-step
-        # run: apt update
+      - name: text-step
+        run: apt
+
+      - name: longer-step
+        run: apt update
 
       # - run: apt install -y neovim
 

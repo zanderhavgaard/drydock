@@ -3,7 +3,7 @@ import logging
 import config
 from rich import print
 from abstract_importer import AbstractImporter
-from github_actions import GithubActionsImporter
+from github_actions_importer import GithubActionsImporter
 
 # setup logging
 log = logging.getLogger("rich")

@@ -1,25 +1,27 @@
 import sys
 import yaml
 import logging
+import config
 from rich.logging import RichHandler
 from model import Run, Container, Task
+from github_actions_runner import GithubActionsRun, GithubActionsContainer, GithubActionsTask
 from abstract_importer import AbstractImporter
 
 # setup logging
-logging.basicConfig(format="%(message)s", datefmt="[%X]", level=logging.DEBUG, handlers=[RichHandler()])
+logging.basicConfig(format="%(message)s", datefmt="[%X]", level=config.LOG_LEVEL, handlers=[RichHandler()])
 log = logging.getLogger("rich")
 
 
 class GithubActionsImporter(AbstractImporter):
-    def load_pipeline_file(self, file_path: str) -> Run:
+    def import_pipeline_file(self, file_path: str) -> Run:
 
-        loaded = None
+        imported = None
 
         with open(file_path, "r") as _file:
-            loaded = yaml.load(_file, Loader=yaml.FullLoader)
+            imported = yaml.load(_file, Loader=yaml.FullLoader)
 
-        if loaded is not None:
-            return self.create_run_from_pipeline_file(loaded)
+        if imported is not None:
+            return self.create_run_from_pipeline_file(imported)
         else:
             raise RuntimeError("There was an error loading the pipeline file.")
 
@@ -36,7 +38,7 @@ class GithubActionsImporter(AbstractImporter):
             container = self.create_container_from_gha_job(job_name, job)
             containers.append(container)
 
-        return Run(name=name, containers=containers)
+        return GithubActionsRun(name=name, containers=containers)
 
     def create_container_from_gha_job(self, job_name: str, job: dict) -> Container:
 
@@ -48,7 +50,7 @@ class GithubActionsImporter(AbstractImporter):
             image = job["container"]
         elif "runs-on" in job:
             if job["runs-on"] == "ubuntu-latest":
-                image = "ubuntu"
+                image = "ubuntu:latest"
             else:
                 log.error(f"{job['runs-on']} is not a supported runs-on value")
                 sys.exit(1)
@@ -67,7 +69,7 @@ class GithubActionsImporter(AbstractImporter):
             task = self.create_task_from_gha_step(step)
             tasks.append(task)
 
-        return Container(name=name, image=image, tasks=tasks)
+        return GithubActionsContainer(name=name, image=image, tasks=tasks)
 
     def create_task_from_gha_step(self, step: dict) -> Task:
         # figure out the name of the task
@@ -84,4 +86,4 @@ class GithubActionsImporter(AbstractImporter):
         command = step["run"]
 
         # create task object
-        return Task(name=name, type=type, command=command)
+        return GithubActionsTask(name=name, type=type, command=command)

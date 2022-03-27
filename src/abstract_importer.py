@@ -4,5 +4,5 @@ from model import Run
 
 class AbstractImporter(ABC):
     @abstractmethod
-    def load_pipeline_file() -> Run:
+    def import_pipeline_file() -> Run:
         pass

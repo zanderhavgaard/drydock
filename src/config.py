@@ -1,6 +1,7 @@
 """
 Provides global configuration
 """
+import logging
 from argparse import Namespace
 
 # whether to print the banner when starting
@@ -14,6 +15,15 @@ SUPPORTED_PLATFORMS = ["githubactions"]
 
 # which pipeline file to operate on
 FILENAME = ""
+
+# whether to remove container after run
+REMOVE_CONTAINER = True
+
+# default logging level
+LOG_LEVEL = logging.DEBUG
+
+# stream output from each task
+STREAM_EXEC_OUTPUT = True
 
 
 def add_args_to_config(args: Namespace) -> None:
