@@ -1,3 +1,4 @@
+import sys
 from argparse import ArgumentParser
 
 
@@ -19,6 +20,16 @@ def parse_cli_args():
         help="The CI platform format to use to parse the pipeline file",
     )
     parser.add_argument("--file", action="store", dest="filename", type=str, help="The .yaml CI pipeline file to run")
+
+    args = parser.parse_args()
+
+    # if no subcommand is specified, print help
+    if args.platform is None:
+        parser.print_help()
+        sys.exit(0)
+    if args.filename is None:
+        parser.print_help()
+        sys.exit(0)
 
     # actually parse the arguments
     return parser.parse_args()
