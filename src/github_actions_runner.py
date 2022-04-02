@@ -1,14 +1,12 @@
 import sys
-import logging
 import docker
-import docker_utils
-import config
 from rich.logging import RichHandler
+import config
+import docker_utils
 from model import Run, Container, Task
+import console
 
-# setup logging
-logging.basicConfig(format="%(message)s", datefmt="[%X]", level=config.LOG_LEVEL, handlers=[RichHandler()])
-log = logging.getLogger("rich")
+console = console.default_console
 
 
 class GithubActionsRun(Run):
@@ -18,11 +16,10 @@ class GithubActionsRun(Run):
 
     def execute_run(self) -> bool:
 
-        log.info(f"Executing run: {self.name}")
+        console.print(f"Executing run: {self.name}")
 
         for index, container in enumerate(self.containers):
-            log.info("---")
-            log.info(f"Container {index + 1} / {len(self.containers)} in run.")
+            console.rule(f"Container {index + 1} / {len(self.containers)} in run.")
             container.execute_container()
 
 
@@ -34,9 +31,9 @@ class GithubActionsContainer(Container):
 
     def execute_container(self) -> bool:
 
-        log.info(f"Executing container: {self.name}")
-        log.info(f"Container image: {self.image}")
-        log.info(f"Container will execute {len(self.tasks)} tasks")
+        console.print(f"Executing container: {self.name}")
+        console.print(f"Container image: {self.image}")
+        console.print(f"Container will execute {len(self.tasks)} tasks")
 
         # start container to run tasks in
         container = docker_utils.run_container(self.image)
@@ -56,6 +53,6 @@ class GithubActionsTask(Task):
         self.command = command
 
     def execute_task(self, container: docker.models.containers.Container) -> bool:
-        print(f"task: {self.name}")
+        console.print(f"task: {self.name}")
 
         docker_utils.exec_in_container(container, self.command)

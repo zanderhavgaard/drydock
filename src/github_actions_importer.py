@@ -1,15 +1,12 @@
 import sys
 import yaml
-import logging
 import config
-from rich.logging import RichHandler
 from model import Run, Container, Task
 from github_actions_runner import GithubActionsRun, GithubActionsContainer, GithubActionsTask
 from abstract_importer import AbstractImporter
+import console
 
-# setup logging
-logging.basicConfig(format="%(message)s", datefmt="[%X]", level=config.LOG_LEVEL, handlers=[RichHandler()])
-log = logging.getLogger("rich")
+console = console.default_console
 
 
 class GithubActionsImporter(AbstractImporter):
@@ -52,11 +49,11 @@ class GithubActionsImporter(AbstractImporter):
             if job["runs-on"] == "ubuntu-latest":
                 image = "ubuntu:latest"
             else:
-                log.error(f"{job['runs-on']} is not a supported runs-on value")
+                console.print(f"{job['runs-on']} is not a supported runs-on value")
                 sys.exit(1)
         else:
-            log.error("Could not choose a suitable container image in the following job")
-            log.error(job)
+            console.print("Could not choose a suitable container image in the following job")
+            console.print(job)
             sys.exit(1)
 
         # setup the tasks for this container

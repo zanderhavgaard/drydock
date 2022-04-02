@@ -1,7 +1,6 @@
 """
 Provides global configuration
 """
-import logging
 from argparse import Namespace
 
 # whether to print the banner when starting
@@ -18,9 +17,6 @@ FILENAME = ""
 
 # whether to remove container after run
 REMOVE_CONTAINER = True
-
-# default logging level
-LOG_LEVEL = logging.DEBUG
 
 # stream output from each task
 STREAM_EXEC_OUTPUT = True

@@ -1,13 +1,10 @@
-import logging
 from argparse import Namespace
-from rich.logging import RichHandler
 import cli_args
 import utils
 import config
+import console
 
-# setup logging
-logging.basicConfig(format="%(message)s", datefmt="[%X]", level=config.LOG_LEVEL, handlers=[RichHandler()])
-log = logging.getLogger("rich")
+console = console.default_console
 
 
 def entrypoint(args: Namespace = None) -> None:
@@ -15,10 +12,10 @@ def entrypoint(args: Namespace = None) -> None:
     if config.PRINT_BANNER:
         utils.print_banner()
 
-    log.info("Starting drydock.")
+    console.print("Starting drydock.")
 
     if args is None:
-        log.debug("Parsing cli args")
+        console.print("Parsing cli args")
         # parse the cli args
         args = cli_args.parse_cli_args()
         # update the global config with args
@@ -30,10 +27,12 @@ def entrypoint(args: Namespace = None) -> None:
     # create a run from a pipeline file
     run = importer.import_pipeline_file(config.FILENAME)
 
+    console.rule("Starting run")
+
     # execute taks in containers for the run
     run.execute_run()
 
-    print("sanity")
+    console.print("sanity")
 
     #  docker_utils.run_test_container()
 

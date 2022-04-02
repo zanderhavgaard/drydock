@@ -1,19 +1,17 @@
 import pyfiglet
-import logging
 import config
-from rich import print
 from abstract_importer import AbstractImporter
 from github_actions_importer import GithubActionsImporter
+import console
 
-# setup logging
-log = logging.getLogger("rich")
+console = console.default_console
 
 
 def print_banner() -> None:
     banner = pyfiglet.figlet_format("drydock", font="slant")
-    print(f"[magenta]{banner}[/magenta]")
-    print(f"[blue]~ https://github.com/zanderhavgaard/drydock[/blue]")
-    print(f"[cyan]-------------------------------------------[/cyan]")
+    console.print(f"[magenta]{banner}[/magenta]")
+    console.print("[blue]~ https://github.com/zanderhavgaard/drydock[/blue]")
+    console.print("[cyan]-------------------------------------------[/cyan]")
 
 
 def create_importer() -> AbstractImporter:
@@ -24,7 +22,8 @@ def create_importer() -> AbstractImporter:
             return GithubActionsImporter()
         # default case
         case _:
-            log.error(f"{config.platform} is not a supported pipeline platform.")
-            log.error(f"Supported platforms are: {config.supported_platforms}")
-            log.critical("EXITING with code 1")
+            # TODO how to print errors??
+            console.print(f"{config.platform} is not a supported pipeline platform.")
+            console.print(f"Supported platforms are: {config.supported_platforms}")
+            console.print("EXITING with code 1")
             exit(1)

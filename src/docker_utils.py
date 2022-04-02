@@ -1,21 +1,11 @@
 import docker
 import config
+import console
+
+console = console.default_console
 
 # we only need a single docker client
 CLIENT = docker.from_env()
-
-
-def run_test_container():
-
-    client = docker.from_env()
-
-    container = client.containers.run("ubuntu", ["tail", "-f", "/dev/null"], detach=True)
-
-    print(container)
-
-    exit_code, output = container.exec_run("echo hello world")
-
-    print(exit_code, output)
 
 
 def run_container(image: str) -> docker.models.containers.Container:
@@ -41,21 +31,21 @@ def exec_in_container(container: docker.models.containers.Container, command: st
     # turn command into a list of strings delimited at spaces
     command = command.split(" ")
 
-    print("command", command)
+    console.print("command", command)
 
     if config.STREAM_EXEC_OUTPUT:
         exit_code, stream = container.exec_run(command, stream=True)
 
         for line in stream:
             decoded = line.decode("utf-8")
-            print(decoded, end="")
+            console.print(decoded, end="")
 
-        print("done")
+        console.print("done")
 
     else:
         exit_code, output = container.exec_run(command)
         output = output.decode("utf-8")
-        print(output)
+        console.print(output)
 
     #  print(exit_code)
     #  print(output)
