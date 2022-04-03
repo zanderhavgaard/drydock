@@ -3,6 +3,7 @@ import cli_args
 import utils
 import config
 import console
+import runner
 
 console = console.default_console
 
@@ -30,11 +31,7 @@ def entrypoint(args: Namespace = None) -> None:
     console.rule("Starting run")
 
     # execute taks in containers for the run
-    run.execute_run()
-
-    console.print("sanity")
-
-    #  docker_utils.run_test_container()
+    runner.execute_run(run)
 
 
 # execute the entrypoint

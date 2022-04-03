@@ -2,7 +2,7 @@ import sys
 import yaml
 import config
 from model import Run, Container, Task
-from github_actions_runner import GithubActionsRun, GithubActionsContainer, GithubActionsTask
+from tasks import ShellTask
 from abstract_importer import AbstractImporter
 import console
 
@@ -35,7 +35,7 @@ class GithubActionsImporter(AbstractImporter):
             container = self.create_container_from_gha_job(job_name, job)
             containers.append(container)
 
-        return GithubActionsRun(name=name, containers=containers)
+        return Run(name=name, containers=containers)
 
     def create_container_from_gha_job(self, job_name: str, job: dict) -> Container:
 
@@ -66,7 +66,7 @@ class GithubActionsImporter(AbstractImporter):
             task = self.create_task_from_gha_step(step)
             tasks.append(task)
 
-        return GithubActionsContainer(name=name, image=image, tasks=tasks)
+        return Container(name=name, image=image, tasks=tasks)
 
     def create_task_from_gha_step(self, step: dict) -> Task:
         # figure out the name of the task
@@ -83,4 +83,4 @@ class GithubActionsImporter(AbstractImporter):
         command = step["run"]
 
         # create task object
-        return GithubActionsTask(name=name, type=type, command=command)
+        return ShellTask(name=name, type=type, command=command)
