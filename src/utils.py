@@ -1,4 +1,3 @@
-import pyfiglet
 import config
 from abstract_importer import AbstractImporter
 from github_actions_importer import GithubActionsImporter
@@ -8,7 +7,14 @@ console = console.default_console
 
 
 def print_banner() -> None:
-    banner = pyfiglet.figlet_format("drydock", font="slant")
+    banner = """
+       __               __           __  
+  ____/ /______  ______/ /___  _____/ /__
+ / __  / ___/ / / / __  / __ \/ ___/ //_/
+/ /_/ / /  / /_/ / /_/ / /_/ / /__/ ,<   
+\__,_/_/   \__, /\__,_/\____/\___/_/|_|  
+          /____/                         
+"""
     console.print(f"[magenta]{banner}[/magenta]")
     console.print("[blue]~ https://github.com/zanderhavgaard/drydock[/blue]")
     console.print("[cyan]-------------------------------------------[/cyan]")

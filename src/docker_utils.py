@@ -53,16 +53,22 @@ def exec_in_container(container: docker.models.containers.Container, command: st
             exit_code, stream = container.exec_run(command_list, stream=True)
 
             console.print("Container exec output:")
-            console.print("----------------------")
+            console.rule(style="cyan")
 
             for line in stream:
                 decoded = line.decode("utf-8")
                 print(decoded, end="")
+
+            # no exit code is returned when streaming the output ...
+            # TODO figure out how to get the exit code ?
+            exit_code = 0
 
         else:
             exit_code, output = container.exec_run(command_list)
             output = output.decode("utf-8")
 
             console.print("Container exec output:")
-            console.print("----------------------")
+            console.rule(style="cyan")
             console.print(output)
+
+    return True if exit_code == 0 else False

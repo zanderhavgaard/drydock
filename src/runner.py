@@ -13,8 +13,10 @@ def execute_run(run: Run) -> bool:
     console.print(f"Executing run: {run.name}")
 
     for index, container in enumerate(run.containers):
-        console.rule(f"Container {index + 1} / {len(run.containers)} in run.")
+        rule_text = f"Container {index + 1} / {len(run.containers)}"
+        console.rule(rule_text, style="blue", align="center")
         execute_container(container)
+        console.rule(style="blue")
 
 
 def execute_container(container: Container) -> bool:
@@ -28,10 +30,14 @@ def execute_container(container: Container) -> bool:
 
     # execute each task
     for index, task in enumerate(container.tasks):
-        console.rule(f"Task {index + 1} / {len(container.tasks)}: {task.name}")
+        rule_text = f"Task {index + 1} / {len(container.tasks)}: {task.name}"
+        console.rule(rule_text, style="cyan", align="center")
         #  task.execute_task(docker_container)
-        execute_task(task, docker_container)
-        console.rule()
+        execute_success = execute_task(task, docker_container)
+        if execute_success:
+            console.rule(style="green")
+        else:
+            console.rule(style="red")
 
     # stop container after running all tasks
     docker_utils.stop_container(docker_container)
@@ -42,4 +48,6 @@ def execute_task(task: Task, container: docker.models.containers.Container) -> b
     console.print(f"type:    {task.type}")
     console.print(f"Command: {task.command}")
 
-    task.execute(container)
+    task_success = task.execute(container)
+
+    return task_success

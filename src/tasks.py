@@ -12,4 +12,6 @@ class ShellTask(Task):
 
     def execute(self, container: docker.models.containers.Container) -> bool:
 
-        docker_utils.exec_in_container(container, self.command)
+        execute_success = docker_utils.exec_in_container(container, self.command)
+
+        return execute_success
